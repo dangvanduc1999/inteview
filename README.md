@@ -1,0 +1,27 @@
+# Interview Assignment
+
+Solutions to the interview problems, one folder per problem.
+
+## Structure
+
+| Folder | Description |
+| ------ | ----------- |
+| [`problem-4/`](problem-4) | Three implementations of `sum_to_n` (iterative loop, closed-form formula, and linear recursion) in a single file, `problem-4.js`, with complexity notes. |
+| [`problem-5/`](problem-5) | REST API for users, books and categories on Express 5 + TypeScript, with Postgres (Prisma), Redis and OpenAPI docs. See its own [README](problem-5/README.md) for setup. |
+| [`problem-6/`](problem-6) | System design proposal for a live Top 10 scoreboard module (score recording, live updates, abuse prevention). Document only, see [README](problem-6/README.md). |
+
+### Inside `problem-5/`
+
+| Path | Purpose |
+| ---- | ------- |
+| `src/` | Application code: `app.ts`, `server.ts`, `config/`, `core/`, `modules/`, `types/`, `utils/`. |
+| `prisma/` | Prisma schema and database migrations. |
+| `docker/`, `docker-compose.yml`, `Dockerfile` | Local Postgres and Redis, and the app image. |
+| `scripts/` | Bootstrap, build, test and OpenAPI export scripts. |
+| `test/` | Unit and integration tests. |
+| `docs/` | Generated OpenAPI spec (`openapi.json`, `openapi.html`). |
+| `secrets.example.json` | Template for the git-ignored `secrets.json` (fake local values). |
+
+## Notes
+
+- `node_modules/`, `dist/`, `secrets.json`, `.env*`, logs and IDE files are git-ignored.

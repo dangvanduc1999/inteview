@@ -1,0 +1,56 @@
+// The app builds its connection URL from config + secrets and passes it to PrismaClient,
+// so this env var is only needed by the Prisma CLI (e.g. `prisma migrate`).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  name         String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  books        Book[]
+  categories   Category[]
+
+  @@map("users")
+}
+
+model Category {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  /// Lower-cased name, makes (owner, name) unique ignoring case.
+  nameKey   String   @map("name_key")
+  ownerId   String   @map("owner_id") @db.Uuid
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  books     Book[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([ownerId, nameKey])
+  @@map("categories")
+}
+
+model Book {
+  id            String     @id @default(uuid()) @db.Uuid
+  title         String
+  author        String
+  description   String?
+  isbn          String?
+  publishedYear Int?       @map("published_year")
+  ownerId       String     @map("owner_id") @db.Uuid
+  owner         User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  categories    Category[]
+  deletedAt     DateTime?  @map("deleted_at")
+  createdAt     DateTime   @default(now()) @map("created_at")
+  updatedAt     DateTime   @updatedAt @map("updated_at")
+
+  @@index([ownerId, deletedAt, createdAt])
+  @@map("books")
+}
